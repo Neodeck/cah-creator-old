@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CAH Creator</title>
+    <link rel="stylesheet" href="/css/style.css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+  </head>
+  <body class="landing-mode">
+    <div class="landing">
+      <div class="section group landing-top">
+        <div class="col span_4_of_4 landing-inner">
+          <h1>Create your own Cards Against Humanity decks.</h1>
+          <div class="landing-caption">Collaborate on them with friends.</div>
+          <button id="start" class="landing-button">Create a deck</button>
+        </div>
+      </div>
+
+      <div class="section group">
+        <div class="col span_4_of_4 center">
+          <h1>Latest Decks</h1>
+          <div class="latest-decks"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="creator">
+      <div class="section group">
+        <div class="col span_4_of_4">
+          <input class="deck-name" placeholder="Name your deck"></input>
+
+          <div class="card-ui">
+            <div class="deck-share">
+              Invite others to edit your deck
+            </div>
+
+            <div class="deck-export">
+              Export as JSON
+            </div>
+
+            <h2>BLACK CARDS</h2>
+            <div class="black-cards">
+              <div class="card black">
+                <textarea placeholder="Create a new black card" id="black-card-input"></textarea>
+              </div>
+            </div>
+
+            <h2>WHITE CARDS</h2>
+            <div class="white-cards">
+              <div class="card white">
+                <textarea placeholder="Create a new white card" id="white-card-input"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-overlay">
+      <div class="dots-loader"></div>
+  </body>
+</html>
