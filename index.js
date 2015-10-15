@@ -4,7 +4,19 @@ var express = require('express'),
     io = require('socket.io')(http),
     decks = {};
 
+require('express-namespace');
+
 app.use(express.static(__dirname + "/public"));
+
+function apiFilter(deck){
+  return {
+    name: deck.name,
+    description: deck.description,
+    expansion: deck.expansion,
+    blackCards: deck.blackCards,
+    whiteCards: deck.whiteCards
+  };
+}
 
 function genDeckId(){
   var text = "";
@@ -102,6 +114,16 @@ app.get('/creator', function(req, res){
 
 app.get('/:deck', function(req, res){
   res.redirect('/#creator-' + req.params.deck);
+});
+
+app.namespace('/api', function(){
+  app.get('/deck/:id', function(req, res){
+    if(decks[req.params.id]){
+      res.send(apiFilter(decks[req.params.id]));
+    }else{
+      res.send({error: "Deck not found"}, 404);
+    }
+  });
 });
 
 app.get('/:deck/:token', function(req, res){
