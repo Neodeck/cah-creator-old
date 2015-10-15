@@ -65,7 +65,7 @@ io.on('connection', function(socket){
   });
 
   socket.on("deck:card:black", function(card){
-    if(socket.deck && parseInt(card.pick) !== NaN && card.text.trim() !== ""){
+    if(socket.deck && parseInt(card.pick) !== NaN && card.text.trim() !== "" && card.pick.trim() !== ""){
       decks[socket.deck].blackCards.push({text: card.text, pick: parseInt(card.pick)});
       socket.to(socket.deck).emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
       socket.emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
