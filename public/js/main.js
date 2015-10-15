@@ -74,7 +74,12 @@ $(document).ready(function(){
     $(".card-ui").slideDown();
     $(".loading-overlay").fadeOut();
     window.location = "#creator-" + id;
-    swal("Before you start editing...", "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.", "info");
+    swal({
+      title: "Before you start editing...",
+      text: "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.",
+      icon: "info",
+      html: true
+    });
   });
 
   socket.on("deck:token", function(token){
