@@ -65,7 +65,7 @@ io.on('connection', function(socket){
   });
 
   socket.on("deck:card:black", function(card){
-    if(socket.deck && parseInt(card.pick) !== NaN){
+    if(socket.deck && parseInt(card.pick) !== NaN && card.text.trim() !== ""){
       decks[socket.deck].blackCards.push({text: card.text, pick: parseInt(card.pick)});
       socket.to(socket.deck).emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
       socket.emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
@@ -73,7 +73,7 @@ io.on('connection', function(socket){
   });
 
   socket.on("deck:card:white", function(card){
-    if(socket.deck){
+    if(socket.deck && card.trim() !== ""){
       decks[socket.deck].whiteCards.push(card);
       socket.to(socket.deck).emit("deck:card:white", card);
       socket.emit("deck:card:white", card);
