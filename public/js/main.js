@@ -4,12 +4,36 @@
 $(document).ready(function(){
   var socket = io.connect();
 
-  var deckId, deckToken;
+  var deckId, deckToken, internalDeck;
 
-  function addCard(type, card){
+  internalDeck = {
+    name: "",
+    description: "Created with CAH Creator: cahcreator.com",
+    expansion: true,
+    blackCards: [ ],
+    whiteCards: []
+  };
+
+  function addCard(type, card, pick){
     var $newCard = $("<div class='card " + type + "'></div>");
         $newCard.text(card);
+
+    if(pick){
+      var $pick = $("<span class='black-card-pick-number'></span>");
+          $pick.text("Pick " + pick);
+      $newCard.append($pick);
+    }
+
     $(".card." + type).last().after($newCard);
+
+    switch(type){
+      case "black":
+        internalDeck.blackCards.push({text: card, pick: parseInt(pick)});
+        break;
+      case "white":
+        internalDeck.whiteCards.push(card);
+        break;
+    }
   }
 
   function gotoDeck(id){
@@ -26,11 +50,12 @@ $(document).ready(function(){
   });
 
   socket.on("decks:latest", function(decks){
+    $(".latest-decks").text("");
     for(var i in decks){
       var deck = decks[i],
-          $link = $("<a href='#'>" + deck + "</a><br>");
-          $link.click(function(){gotoDeck(i)});
-      $(".latest-decks").append($link);
+          $link = $("<a href='#'></a>");
+          $link.click(function(){gotoDeck(i)}).text(deck);
+      $(".latest-decks").append($link).append("<br>"); // lazy
     }
   });
 
@@ -48,6 +73,7 @@ $(document).ready(function(){
   socket.on("deck:name", function(name){
     $(".deck-name").val(name);
     document.title = name + " // CAH Creator";
+    internalDeck.name = name;
   });
 
   socket.on("deck:access:err", function(message){
@@ -57,7 +83,7 @@ $(document).ready(function(){
   });
 
   socket.on("deck:card:black", function(card){
-    addCard("black", card);
+    addCard("black", card.text, card.pick);
   });
 
   socket.on("deck:card:white", function(card){
@@ -66,7 +92,7 @@ $(document).ready(function(){
 
   socket.on("deck:cards:black", function(cards){
     cards.forEach(function(card){
-      addCard("black", card.text);
+      addCard("black", card.text, card.pick);
     });
   });
 
@@ -98,19 +124,20 @@ $(document).ready(function(){
   });
 
   $(".deck-export").click(function(){
-    alert("Coming soon! This will be compatible with Cards Against Equestria (and forks).");
+    prompt("Here's your deck in JSON form, you can import this into projects like Cards Against Equestria:", JSON.stringify(internalDeck));
   });
 
   $(".deck-name").keyup(function(){
     socket.emit("deck:name", $(".deck-name").val());
     document.title = $(".deck-name").val() + " // CAH Creator";
+    internalDeck.name = $(".deck-name").val();
   });
 
   $("#black-card-input").keypress(function(e){
     if(e.keyCode === 13){
       e.preventDefault();
-      socket.emit("deck:card:black", $("#black-card-input").val());
-      $("#black-card-input").val("");
+      socket.emit("deck:card:black", {text: $("#black-card-input").val(), pick: $("#black-card-pick-input").val()});
+      $("#black-card-input, #black-card-pick-input").val("");
     }
   });
 

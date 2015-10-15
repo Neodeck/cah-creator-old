@@ -44,6 +44,7 @@ io.on('connection', function(socket){
         blackCards: [ ],
         whiteCards: [ ]
       };
+
       var deck = decks[deckId];
 
       deck.accessToken = genDeckId();
@@ -51,19 +52,23 @@ io.on('connection', function(socket){
       socket.join(deckId);
       socket.emit("deck:id", deckId);
       socket.emit("deck:token", deck.accessToken);
+
+      io.emit("decks:latest", getLatestDecks()); // tell all clients
     }else{
       decks[socket.deck].name = name;
       console.log(decks[socket.deck]);
       console.log(decks);
       socket.to(socket.deck).emit("deck:name", name);
+
+      io.emit("decks:latest", getLatestDecks()); // tell all clients
     }
   });
 
   socket.on("deck:card:black", function(card){
-    if(socket.deck){
-      decks[socket.deck].blackCards.push({text: card, pick: 1});
-      socket.to(socket.deck).emit("deck:card:black", card);
-      socket.emit("deck:card:black", card);
+    if(socket.deck && parseInt(card.pick) !== NaN){
+      decks[socket.deck].blackCards.push({text: card.text, pick: parseInt(card.pick)});
+      socket.to(socket.deck).emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
+      socket.emit("deck:card:black", {text: card.text, pick: parseInt(card.pick)});
     }
   });
 
