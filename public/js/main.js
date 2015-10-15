@@ -162,7 +162,7 @@ $(document).ready(function(){
     internalDeck.name = $(".deck-name").val();
   });
 
-  $("#black-card-input").keypress(function(e){
+  $("#black-card-input, #black-card-pick-input").keypress(function(e){
     if(e.keyCode === 13){
       e.preventDefault();
       socket.emit("deck:card:black", {text: $("#black-card-input").val(), pick: $("#black-card-pick-input").val()});
