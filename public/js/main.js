@@ -1,3 +1,6 @@
+// hello, welcome to my very badly
+// written code! I wrote this in an
+// hour.
 $(document).ready(function(){
   var socket = io.connect();
 
@@ -44,6 +47,7 @@ $(document).ready(function(){
 
   socket.on("deck:name", function(name){
     $(".deck-name").val(name);
+    document.title = name + " // CAH Creator";
   });
 
   socket.on("deck:access:err", function(message){
@@ -99,6 +103,7 @@ $(document).ready(function(){
 
   $(".deck-name").keyup(function(){
     socket.emit("deck:name", $(".deck-name").val());
+    document.title = $(".deck-name").val() + " // CAH Creator";
   });
 
   $("#black-card-input").keypress(function(e){
