@@ -100,6 +100,10 @@ app.get('/creator', function(req, res){
   res.redirect('/#creator');
 });
 
+app.get('/:deck', function(req, res){
+  res.redirect('/#creator-' + req.params.deck);
+});
+
 app.get('/:deck/:token', function(req, res){
   res.redirect('/#creator-' + req.params.deck + '/' + req.params.token);
 });

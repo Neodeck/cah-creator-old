@@ -135,7 +135,10 @@ $(document).ready(function(){
   });
 
   $(".deck-share").click(function(){
-    swal("Sharing URL", "Share this link with collaborators to let them edit this deck:\n\nhttp://" + window.location.host + "/" + deckId + "/" + deckToken, "info");
+    swal("Sharing URL", "Share this link with collaborators to let them edit this deck:\n\n" +
+                        "http://" + window.location.host + "/" + deckId + "/" + deckToken +
+                        "\n\nIf you only want to share the view-only deck, use this URL:\n\n" +
+                        "http://" + window.location.host + "/" + deckId,"info");
     // prompt("Sharing link:", );
   });
 
