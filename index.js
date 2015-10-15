@@ -2,15 +2,7 @@ var express = require('express'),
     app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http),
-    decks = {},
-    deckTemplate = {
-      name: "",
-      accessToken: "",
-      description: "Created with CAH Creator: cahcreator.com",
-      expansion: true,
-      blackCards: [ ],
-      whiteCards: [ ]
-    };
+    decks = {};
 
 app.use(express.static(__dirname + "/public"));
 
@@ -37,13 +29,21 @@ io.on('connection', function(socket){
   socket.emit("hello");
 
   socket.on("decks:latest", function(){
+    console.log(decks);
     socket.emit("decks:latest", getLatestDecks());
   });
 
   socket.on("deck:name", function(name){
     if(!socket.deck){
       var deckId = genDeckId();
-      decks[deckId] = deckTemplate;
+      decks[deckId] = {
+        name: "",
+        accessToken: "",
+        description: "Created with CAH Creator: cahcreator.com",
+        expansion: true,
+        blackCards: [ ],
+        whiteCards: [ ]
+      };
       var deck = decks[deckId];
 
       deck.accessToken = genDeckId();
@@ -53,6 +53,8 @@ io.on('connection', function(socket){
       socket.emit("deck:token", deck.accessToken);
     }else{
       decks[socket.deck].name = name;
+      console.log(decks[socket.deck]);
+      console.log(decks);
       socket.to(socket.deck).emit("deck:name", name);
     }
   });
