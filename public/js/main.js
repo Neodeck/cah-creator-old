@@ -77,7 +77,7 @@ $(document).ready(function(){
     swal({
       title: "Before you start editing...",
       text: "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.",
-      icon: "info",
+      type: "info",
       html: true
     });
   });
