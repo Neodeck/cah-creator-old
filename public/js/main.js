@@ -74,6 +74,7 @@ $(document).ready(function(){
     $(".card-ui").slideDown();
     $(".loading-overlay").fadeOut();
     window.location = "#creator-" + id;
+    swal("Before you start editing...", "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.", "info");
   });
 
   socket.on("deck:token", function(token){
@@ -138,7 +139,7 @@ $(document).ready(function(){
     swal("Sharing URL", "Share this link with collaborators to let them edit this deck:\n\n" +
                         "http://" + window.location.host + "/" + deckId + "/" + deckToken +
                         "\n\nIf you only want to share the view-only deck, use this URL:\n\n" +
-                        "http://" + window.location.host + "/" + deckId,"info");
+                        "http://" + window.location.host + "/" + deckId, "info");
     // prompt("Sharing link:", );
   });
 
