@@ -100,4 +100,8 @@ app.get('/creator', function(req, res){
   res.redirect('/#creator');
 });
 
+app.get('/:deck/:token', function(req, res){
+  res.redirect('/#creator-' + req.params.deck + '/' + req.params.token);
+});
+
 http.listen(process.env.PORT || 3000);

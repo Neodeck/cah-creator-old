@@ -14,6 +14,16 @@ $(document).ready(function(){
     whiteCards: []
   };
 
+  function genJsonTextarea(){
+    var $textarea = $("<textarea>");
+        $textarea.text(JSON.stringify(internalDeck))
+                 .prop("disabled", true)
+                 .css("width", "100%")
+                 .css("height", "300px")
+                 .css("font-family", "monospace");
+    return $textarea[0].outerHTML; // lel hacky
+  }
+
   function addCard(type, card, pick){
     var $newCard = $("<div class='card " + type + "'></div>");
         $newCard.text(card);
@@ -79,7 +89,12 @@ $(document).ready(function(){
   socket.on("deck:access:err", function(message){
     $("body").addClass("landing-mode").removeClass("creator-mode");
     $(".loading-overlay").fadeOut();
-    alert(message);
+    swal({
+      title: "Error loading deck!",
+      text: message,
+      type: "error",
+      confirmButtonText: "Okay thanks for letting me know"
+    });
   });
 
   socket.on("deck:card:black", function(card){
@@ -120,11 +135,16 @@ $(document).ready(function(){
   });
 
   $(".deck-share").click(function(){
-    prompt("Sharing link:", "http://" + window.location.host + "/#creator-" + deckId + "/" + deckToken);
+    swal("Sharing URL", "Share this link with collaborators to let them edit this deck:\n\nhttp://" + window.location.host + "/" + deckId + "/" + deckToken, "info");
+    // prompt("Sharing link:", );
   });
 
   $(".deck-export").click(function(){
-    prompt("Here's your deck in JSON form, you can import this into projects like Cards Against Equestria:", JSON.stringify(internalDeck));
+    swal({
+      title: "Export as JSON",
+      text: "Here's your exported JSON. This should work in apps such as Cards Against Equestria (and forks).<br><br>" + genJsonTextarea(),
+      html: true
+    });
   });
 
   $(".deck-name").keyup(function(){
