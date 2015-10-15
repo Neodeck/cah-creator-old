@@ -1,10 +1,9 @@
 var express = require('express'),
+    namespace = require('express-namespace'),
     app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http),
     decks = {};
-
-require('express-namespace');
 
 app.use(express.static(__dirname + "/public"));
 
@@ -117,6 +116,12 @@ app.get('/:deck', function(req, res){
 });
 
 app.namespace('/api', function(){
+  app.get('/deck(s)?', function(req, res){
+    var deckIds = [];
+    for(var i in decks) deckIds.push(i);
+    res.send(deckIds);
+  });
+
   app.get('/deck/:id', function(req, res){
     if(decks[req.params.id]){
       res.send(apiFilter(decks[req.params.id]));
