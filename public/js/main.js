@@ -25,7 +25,7 @@ $(document).ready(function(){
     switch(urlQuery("partner")){
       case "cae":
         swal({
-          title: "Welcome CaE players!",
+          title: "Welcome CAE players!",
           text: "This is CAH Creator, a website where you can create your own Cards Against Humanity decks " +
                 "and invite your friends to work on them with you. You're able to play " +
                 "this deck in Cards Against Equestria once you're done!",
