@@ -1,31 +1,16 @@
+// TODO literally all the server-side code is in one file.
+// I should probably split these up more. possibly use
+// actual models for the decks?
+
 var express = require('express'),
     namespace = require('express-namespace'),
     app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http),
+    helper = require('./lib/helper'),
     decks = {};
 
 app.use(express.static(__dirname + "/public"));
-
-function apiFilter(deck){
-  return {
-    name: deck.name,
-    description: deck.description,
-    expansion: deck.expansion,
-    blackCards: deck.blackCards,
-    whiteCards: deck.whiteCards
-  };
-}
-
-function genDeckId(){
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for(var i=0; i < 10; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
 
 function getLatestDecks(){
   var newDecks = {};
@@ -45,7 +30,7 @@ io.on('connection', function(socket){
 
   socket.on("deck:name", function(name){
     if(!socket.deck){
-      var deckId = genDeckId();
+      var deckId = helper.randId();
       decks[deckId] = {
         name: "",
         accessToken: "",
@@ -57,7 +42,7 @@ io.on('connection', function(socket){
 
       var deck = decks[deckId];
 
-      deck.accessToken = genDeckId();
+      deck.accessToken = helper.randId();
       socket.deck = deckId;
       socket.join(deckId);
       socket.emit("deck:id", deckId);
@@ -121,7 +106,7 @@ app.namespace('/api', function(){
 
   app.get('/deck/:id', function(req, res){
     if(decks[req.params.id]){
-      res.send(apiFilter(decks[req.params.id]));
+      res.send(helper.deckApiFilter(decks[req.params.id]));
     }else{
       res.send({error: "Deck not found"}, 404);
     }
