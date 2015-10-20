@@ -1,5 +1,7 @@
 # CAH Creator
 
+![](https://i.imgur.com/kRdBaPx.png)
+
 A lightweight, collabor- you get it by now, right? Just [go to the website](http://cahcreator.com) and check it out.
 
 ## TODO
