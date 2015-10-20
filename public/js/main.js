@@ -14,6 +14,30 @@ $(document).ready(function(){
     whiteCards: []
   };
 
+  function urlQuery(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
+  if(urlQuery("partner")){
+    switch(urlQuery("partner")){
+      case "cae":
+        swal({
+          title: "Welcome CaE players!",
+          text: "This is CAH Creator, a website where you can create your own Cards Against Humanity decks " +
+                "and invite your friends to work on them with you. You're able to play " +
+                "this deck in Cards Against Equestria once you're done!",
+          confirmButtonText: "Let me in!",
+          type: "info"
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   function genJsonTextarea(){
     var $textarea = $("<textarea>");
         $textarea.text(JSON.stringify(internalDeck))
@@ -150,8 +174,9 @@ $(document).ready(function(){
 
   $(".deck-export").click(function(){
     swal({
-      title: "Export as JSON",
-      text: "Here's your exported JSON. This should work in apps such as Cards Against Equestria (and forks).<br><br>" + genJsonTextarea(),
+      title: "Export Deck",
+      text: "Here's your exported JSON. This should work in apps such as Cards Against Equestria (and forks).<br><br>" + genJsonTextarea() + "<br><br>" +
+            "Deck ID: <b>" + deckId + "</b>",
       html: true
     });
   });

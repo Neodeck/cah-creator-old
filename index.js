@@ -40,7 +40,6 @@ io.on('connection', function(socket){
   socket.emit("hello");
 
   socket.on("decks:latest", function(){
-    console.log(decks);
     socket.emit("decks:latest", getLatestDecks());
   });
 
@@ -67,8 +66,6 @@ io.on('connection', function(socket){
       io.emit("decks:latest", getLatestDecks()); // tell all clients
     }else{
       decks[socket.deck].name = name;
-      console.log(decks[socket.deck]);
-      console.log(decks);
       socket.to(socket.deck).emit("deck:name", name);
 
       io.emit("decks:latest", getLatestDecks()); // tell all clients
@@ -129,6 +126,17 @@ app.namespace('/api', function(){
       res.send({error: "Deck not found"}, 404);
     }
   });
+});
+
+app.get('/partner/:partner', function(req, res){
+  switch(req.params.partner){
+    case "cae":
+      res.redirect('/?partner=cae&game_id=' + req.query.game_id + '#creator');
+      break;
+    default:
+      res.redirect('/');
+      break;
+  }
 });
 
 app.get('/:deck/:token', function(req, res){
