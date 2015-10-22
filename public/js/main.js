@@ -204,7 +204,9 @@ $(document).ready(function(){
   $(".deck-export").click(function(){
     swal({
       title: "Export Deck",
-      text: "Here's your exported JSON. This should work in apps such as Cards Against Equestria (and forks).<br><br>" + genJsonTextarea() + "<br><br>" +
+      text: "Here's your exported JSON. This should work in apps such as Cards Against Equestria (and forks). " +
+            "We recommend keeping this on <a href='http://gist.github.com'>GitHub Gist</a> and bookmarking it." +
+            "<br><br>" + genJsonTextarea() + "<br><br>" +
             "Deck ID: <b>" + deckId + "</b>",
       html: true
     });
