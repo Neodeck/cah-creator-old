@@ -72,7 +72,7 @@ io.on('connection', function(socket){
       importedJson.blackCards.forEach(function(card){
         if(card.pick <= 0){
           invalid = true;
-          message = "You can't pick less than 0 on a black card.";
+          message = "You can't pick less than 1 on a black card.";
         }
       });
 
