@@ -229,6 +229,11 @@ input[type=number]::-webkit-outer-spin-button {
   transition: .3s all;
 }
 
+/* swal */
+.sweet-alert a{
+  color: black;
+}
+
 @keyframes dots-loader {
   0% {
     box-shadow: #f86 -14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
