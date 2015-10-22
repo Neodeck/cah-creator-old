@@ -61,10 +61,19 @@ io.on('connection', function(socket){
   socket.on("deck:import", function(importedJson){
     if(!socket.deck){
       var deckId = helper.randId(),
-          invalid = false;
+          invalid = false,
+          message = "That doesn't look like a valid deck object.";
 
       Deck.forEach(function(prop){
         if(!importedJson[prop.name] || typeof(importedJson[prop.name]) !== prop.type) invalid = true;
+      });
+
+      // pick # validation
+      importedJson.blackCards.forEach(function(card){
+        if(card.pick <= 0){
+          invalid = true;
+          message = "You can't pick less than 0 on a black card.";
+        }
       });
 
       if(!invalid){
@@ -91,7 +100,7 @@ io.on('connection', function(socket){
 
         io.emit("decks:latest", getLatestDecks());
       }else{
-        socket.emit("deck:import:fail", "That doesn't look like a valid deck object.");
+        socket.emit("deck:import:fail", message);
       }
     }
   });
