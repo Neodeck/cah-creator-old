@@ -1,6 +1,6 @@
 # CAH Creator
 
-![](https://i.imgur.com/kRdBaPx.png)
+![](https://cloud.githubusercontent.com/assets/2646487/10656616/7c37071a-7835-11e5-8cfb-51aab14d8446.png)
 
 A lightweight, collabor- you get it by now, right? Just [go to the website](http://cahcreator.com) and check it out.
 
