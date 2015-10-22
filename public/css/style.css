@@ -13,6 +13,7 @@ body{
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
   padding-bottom: 40px;
+  background: #eeeded;
 }
 
 body.creator-mode .landing{
@@ -70,6 +71,7 @@ body.landing-mode .creator{
   font-size: 2em;
   border: none;
   margin-bottom: 10px;
+  background: transparent;
   display: block;
 }
 
@@ -156,8 +158,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .card.white{
-  border: 1px solid black;
+  /* border: 1px solid black; */
   color: black;
+  background: #fff;
 }
 
 .card textarea{

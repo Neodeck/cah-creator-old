@@ -180,6 +180,7 @@ $(document).ready(function(){
       $("input, textarea").prop("disabled", true);
       $(".deck-name").before("[read-only]");
       $(".deck-share").remove();
+      $(".editor-only").hide();
     }
   });
 
