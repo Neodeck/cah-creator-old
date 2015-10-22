@@ -106,7 +106,7 @@ body.landing-mode .creator{
 }
 
 .card.black{
-  background: black;
+  background: #212121;
   color: white;
   position: relative;
 }
