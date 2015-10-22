@@ -8,15 +8,16 @@ var express = require('express'),
     http = require('http').Server(app),
     io = require('socket.io')(http),
     helper = require('./lib/helper'),
+    Deck = require('./lib/models/deck'),
     decks = {};
 
 app.use(express.static(__dirname + "/public"));
 
 function getLatestDecks(){
-  var newDecks = {};
+  var newDecks = [];
   for(var i in decks){
     var deck = decks[i];
-    newDecks[i] = deck.name;
+    newDecks.push({id: i, name: deck.name});
   }
   return newDecks;
 }
@@ -34,7 +35,7 @@ io.on('connection', function(socket){
       decks[deckId] = {
         name: "",
         accessToken: "",
-        description: "Created with CAH Creator: cahcreator.com",
+        description: "Created with cahcreator.com",
         expansion: true,
         blackCards: [ ],
         whiteCards: [ ]
@@ -54,6 +55,44 @@ io.on('connection', function(socket){
       socket.to(socket.deck).emit("deck:name", name);
 
       io.emit("decks:latest", getLatestDecks()); // tell all clients
+    }
+  });
+
+  socket.on("deck:import", function(importedJson){
+    if(!socket.deck){
+      var deckId = helper.randId(),
+          invalid = false;
+
+      Deck.forEach(function(prop){
+        if(!importedJson[prop.name] || typeof(importedJson[prop.name]) !== prop.type) invalid = true;
+      });
+
+      if(!invalid){
+        decks[deckId] = importedJson;
+
+        var deck = decks[deckId];
+
+        // overrides
+        deck.description = "Created with cahcreator.com";
+        deck.expansion = true;
+
+        deck.accessToken = helper.randId();
+        socket.deck = deckId;
+        socket.join(deckId);
+
+        socket.emit("deck:id", deckId);
+        socket.emit("deck:token", deck.accessToken);
+        socket.emit("deck:editor", true);
+        socket.emit("deck:name", deck.name);
+        socket.emit("deck:cards:black", deck.blackCards);
+        socket.emit("deck:cards:white", deck.whiteCards);
+
+        socket.emit("deck:import:complete", importedJson);
+
+        io.emit("decks:latest", getLatestDecks());
+      }else{
+        socket.emit("deck:import:fail", "That doesn't look like a valid deck object.");
+      }
     }
   });
 

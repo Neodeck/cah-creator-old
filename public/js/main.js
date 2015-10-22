@@ -4,14 +4,37 @@
 $(document).ready(function(){
   var socket = io.connect();
 
-  var deckId, deckToken, internalDeck;
+  var deckId, deckToken, internalDeck, imported;
+
+  deckModel = [
+    {
+      name: "name",
+      type: "string"
+    },
+    {
+      name: "description",
+      type: "string"
+    },
+    {
+      name: "expansion",
+      type: "boolean"
+    },
+    {
+      name: "blackCards",
+      type: "object"
+    },
+    {
+      name: "whiteCards",
+      type: "object"
+    }
+  ];
 
   internalDeck = {
     name: "",
     description: "Created with CAH Creator: cahcreator.com",
     expansion: true,
     blackCards: [ ],
-    whiteCards: []
+    whiteCards: [ ]
   };
 
   function urlQuery(name) {
@@ -85,25 +108,30 @@ $(document).ready(function(){
 
   socket.on("decks:latest", function(decks){
     $(".latest-decks").text("");
-    for(var i in decks){
-      var deck = decks[i],
-          $link = $("<a href='#'></a>");
-          $link.click(function(){gotoDeck(i)}).text(deck);
+    decks.forEach(function(deck){
+      var $link = $("<a></a>");
+      $link.data("deck-id", deck.id).text(deck.name).attr("href", "/" + deck.id).click(function(e){
+        e.preventDefault();
+        gotoDeck($(this).data("deck-id"));
+      });
       $(".latest-decks").append($link).append("<br>"); // lazy
-    }
+    });
   });
 
   socket.on("deck:id", function(id){
     deckId = id;
+    $("body").addClass("creator-mode").removeClass("landing-mode");
     $(".card-ui").slideDown();
     $(".loading-overlay").fadeOut();
     window.location = "#creator-" + id;
-    swal({
-      title: "Before you start editing...",
-      text: "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.",
-      type: "info",
-      html: true
-    });
+    if(!imported){
+      swal({
+        title: "Before you start editing...",
+        text: "<b>Decks are not stored permanently!</b> Export your deck when you're done. There is no defined time that decks will last, just remember to export often.",
+        type: "info",
+        html: true
+      });
+    }
   });
 
   socket.on("deck:token", function(token){
@@ -200,6 +228,61 @@ $(document).ready(function(){
       e.preventDefault();
       socket.emit("deck:card:white", $("#white-card-input").val());
       $("#white-card-input").val("");
+    }
+  });
+
+  $("#import").click(function(){
+    swal({
+      title: "Import Deck",
+      text: "Paste your exported JSON here:",
+      type: "input",
+      showCancelButton: true,
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true,
+      inputPlaceholder: "{\"name\": \"A sweet deck\"..."
+    }, function(input){
+      if(input === false) return false;
+
+      try{
+        var importedJson = JSON.parse(input);
+
+        deckModel.forEach(function(prop){
+          if(!importedJson[prop.name] || typeof(importedJson[prop.name]) !== prop.type){
+            swal.showInputError("That doesn't look like a valid deck object.");
+            return false;
+          }
+        });
+
+        imported = true;
+        socket.emit("deck:import", importedJson);
+      }catch(e){
+        switch(e.name){
+          case "SyntaxError":
+            swal.showInputError("That's not valid JSON.");
+            return false;
+          default:
+            swal.showInputError("Something's wrong with what you entered.");
+            return false;
+        }
+      }
+    });
+  });
+
+  socket.on("deck:import:complete", function(json){
+    swal("Deck import complete!", "Imported deck: " + json.name);
+  });
+
+  socket.on("deck:import:fail", function(message){
+    swal.showInputError(message);
+  });
+
+  $("#about").click(function(){
+    if($(".about-overlay").data("open")){
+      $(".about-overlay").fadeOut().data("open", false);
+      $("#about").text("About/Licenses");
+    }else{
+      $(".about-overlay").fadeIn().data("open", true);
+      $("#about").text("Close");
     }
   });
 
