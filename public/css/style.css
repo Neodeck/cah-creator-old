@@ -98,6 +98,7 @@ body.landing-mode .creator{
   font-size: 1.2em;
   overflow-wrap: break-word;
   margin-bottom: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .card-ui{
