@@ -1,0 +1,4 @@
+{
+  "GITHUB_OAUTH_TOKEN": "GitHub OAuth token, obtained through https://github.com/settings/applications/new",
+  "GITHUB_OAUTH_SECRET": "Same as above, but the secret"
+}
