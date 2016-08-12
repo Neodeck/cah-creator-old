@@ -1,6 +1,6 @@
 # CAH Creator
 
-### :warning: This repository is no longer maintained and exists purely for archival purposes. Please go check out [CAH Creator 2.0](/CAHCreator/cah-creator).
+### :warning: This repository is no longer maintained and exists purely for archival purposes. Please go check out [CAH Creator 2.0](https://github.com/CAHCreator/cah-creator).
 
 ![](https://cloud.githubusercontent.com/assets/2646487/10656616/7c37071a-7835-11e5-8cfb-51aab14d8446.png)
 
